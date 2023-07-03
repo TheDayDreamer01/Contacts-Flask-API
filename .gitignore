@@ -1,1 +1,9 @@
 env
+
+App/__pycache__
+App/apis/auth/__pycache__
+App/apis/contact/__pycache__
+
+App/models/__pycache__
+
+Config/__pycache__
