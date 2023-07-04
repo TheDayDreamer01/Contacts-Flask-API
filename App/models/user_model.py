@@ -5,7 +5,7 @@ from marshmallow import fields
 class UserModel(DB.Model):
     __tablename__ = "user"
     id = DB.Column(DB.Integer, primary_key=True)
-    contact = DB.relationship("ContactModel", DB.ForeignKey("user.id"))
+    contact = DB.relationship("ContactModel")
 
     name = DB.Column(DB.String(100), nullable=False)
     email = DB.Column(DB.String(150), nullable=False, unique=True)
@@ -15,11 +15,12 @@ class UserModel(DB.Model):
     no_of_contact = DB.Column(DB.Integer, default=0)
 
 
-    def __init__(self, name : str, email : str, password : str, phone_no : str):
+    def __init__(self, name : str, email : str, password : str, phone_no : str, telephone_no : str):
         self.name = name
         self.email = email
         self.password = password
         self.phone_no = phone_no
+        self.telephone_no = telephone_no
 
 
     def __repr__(self) -> str:
@@ -35,6 +36,16 @@ class UserModel(DB.Model):
             "telephone_no" : self.telephone_no,
             "no_of_contact" : self.no_of_contact
         }
+    
+    @staticmethod
+    def fromObject(object) -> "UserModel":
+        return UserModel(
+            name = object["name"],
+            email = object["email"],
+            password = object["password"],
+            phone_no = object["phone_no"],
+            telephone_no = object["telephone_no"]
+        )
     
     
 class UserSchema(MALLOW.Schema):

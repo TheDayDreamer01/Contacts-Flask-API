@@ -5,7 +5,7 @@ from marshmallow import fields
 class ContactModel(DB.Model):
     __tablename__ = "contact"
     id = DB.Column(DB.Integer, primary_key = True)
-    user_id = DB.Column(DB.Integer, ) 
+    user_id = DB.Column(DB.Integer, DB.ForeignKey("user.id") ) 
 
     first_name = DB.Column(DB.String(40))    
     last_name = DB.Column(DB.String(40))    
@@ -13,7 +13,7 @@ class ContactModel(DB.Model):
     phone_no = DB.Column(DB.String(20), unique=True)
     telephone_no = DB.Column(DB.String(20), unique=True)
 
-    date = DB.Column(DB.Date(timezone=True), default=DB.func.current_date())
+    date = DB.Column(DB.Date, default=DB.func.current_date())
     
 
     def __init__(self, first_name : str, last_name :str, email : str,

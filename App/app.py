@@ -39,8 +39,8 @@ def create_contact_app(environment) -> Flask:
     )
 
 
-    API.add_resource(ContactResource, "/api/contact/")
-    API.add_resource(UserContactResource, "/api/contact/<int:contact_id>")
+    API.add_resource(UserContactResource, "/api/contact/<int:contact_id>/user/<int:user_id>")
+    API.add_resource(ContactResource, "/api/contact/<int:user_id>")
 
     API.add_resource(SignInResource, "/api/auth/signin")
     API.add_resource(SignUpResource, "/api/auth/signup")
