@@ -16,6 +16,16 @@ from flask_restful import (
 
 
 class UserContactResource(Resource):
+
+    def __init__(self):
+        self.parser = reqparse.RequestParser()
+        self.parser.add_argument("first_name", type=str, required=True)
+        self.parser.add_argument("last_name", type=str, required=True)
+        self.parser.add_argument("email", type=str, required=True)
+        self.parser.add_argument("phone_no", type=str, required=True)
+        self.parser.add_argument("telephone_no", type=str, required=True)
+        self.parser.add_argument("work_address", type=str, required=True)
+        self.parser.add_argument("home_address", type=str, required=True)
     
     @jwt_required()
     @jwt_is_blacklist
@@ -29,22 +39,51 @@ class UserContactResource(Resource):
         
         schema = contact_schema.dump(contact)
         return schema, 200  
-        
-
+    
 
     @jwt_required()
     @jwt_is_blacklist
     @auth_required
     def put(self, contact_id : int, user_id : int):
-        pass
+        
+        data = self.parser.parse_args()
+
+        contact : ContactModel = ContactModel.query.filter_by(
+            id = contact_id, user_id = user_id
+        ).first()
+
+        if not contact:
+            abort(404, message="Contact does not exists")
+
+        contact.first_name = data["first_name"]
+        contact.last_name = data["last_name"]
+        contact.phone_no = data["phone_no"]
+        contact.telephone_no = data["telephone_no"]
+        contact.work_address = data["work_address"]
+        contact.home_address = data["home_address"]
+        
+        DB.session.commit()
+        
+        schema = contact_schema.dump(contact)
+        return schema, 200
 
     
     @jwt_required()
     @jwt_is_blacklist
     @auth_required
-    def delete(self, user_id : int):
-        pass
+    def delete(self, contact_id : int, user_id : int):
+        
+        contact : ContactModel = ContactModel.query.filter_by(
+            id = contact_id, user_id = user_id
+        ).first()
 
+        if not contact:
+            abort(404, message="Contact does not exists")
+        
+        DB.session.delete(contact)
+        DB.session.commit()
+
+        return {"message" : "Contact successfully deleted"}, 200 
 
 
 class ContactResource(Resource):
@@ -100,7 +139,3 @@ class ContactResource(Resource):
         
         schema = contact_schema.dump(contact)
         return schema, 200
-        
-    
-
-

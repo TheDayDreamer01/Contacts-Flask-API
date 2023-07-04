@@ -6,7 +6,7 @@ from Config import (
 )
 
 
-ENVIRONMENT : str = "DEVELOPMENT"
+ENVIRONMENT : str = "PRODUCTION"
 config = DevelopmentEnvironment()
 
 
