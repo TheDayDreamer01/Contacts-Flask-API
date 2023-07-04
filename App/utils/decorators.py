@@ -15,3 +15,16 @@ def jwt_is_blacklist(func):
         return func(*args, **kwargs)
     
     return wrapper
+
+
+def auth_required(func):
+    def wrapper(*args, **kwargs):
+
+        user_id = kwargs.get("user_id")
+        user : UserModel = UserModel.query.filter_by(id=user_id).first()
+        if not user:
+            abort(404, message="User does not exists")
+
+        return func(*args, **kwargs)
+    
+    return wrapper
