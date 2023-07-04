@@ -10,7 +10,7 @@ ENVIRONMENT : str = "DEVELOPMENT"
 config = DevelopmentEnvironment()
 
 
-match (ENVIRONMENT):
+match ENVIRONMENT.upper():
     case "PRODUCTION":
         config = ProductionEnvironment()
     case "TESTING":
@@ -22,4 +22,10 @@ match (ENVIRONMENT):
 contact_app = create_contact_app(config)
 
 if __name__ == "__main__":
-    contact_app.run(debug=True)
+    
+    match ENVIRONMENT.upper():
+        case "PRODUCTION":
+            contact_app.run()
+    
+        case _:
+            contact_app.run(debug=True, host="0.0.0.0")
